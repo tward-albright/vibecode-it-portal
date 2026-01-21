@@ -1,5 +1,3 @@
-# Vibe Code the Dream: IT Portal
-A portal to submit IT tickets to Albright.
 class Request
     """Defining what a person needs from IT"""
     def __init__ 
