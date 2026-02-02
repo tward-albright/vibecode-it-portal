@@ -5,7 +5,7 @@ from typing import List
 # -------------------------
 # User
 # -------------------------
-@dataclass
+@dataclass(frozen=True)
 class User:
     name: str
     department: str
@@ -24,6 +24,9 @@ class Ticket:
     urgency: int  # higher number = more urgent
     requester: User
 
+    def key(self):
+        return (self.issue.lower(), self.location.lower(), self.requester)
+
     def __str__(self):
         return (
             f"[Urgency: {self.urgency}] "
@@ -38,9 +41,15 @@ class Ticket:
 class Queue:
     def __init__(self):
         self._tickets: List[Ticket] = []
+        self._keys = set()
 
     def add_ticket(self, ticket: Ticket):
+        key = ticket.key()
+        if key in self._keys:
+            print("⚠️  Duplicate ticket ignored.")
+            return
         self._tickets.append(ticket)
+        self._keys.add(ticket.key())
 
     def get_tickets(self) -> List[Ticket]:
         return self._tickets
@@ -107,6 +116,9 @@ if __name__ == "__main__":
     queue.add_ticket(Ticket("Laptop overheating", "Office 4D", 1, bob))
     queue.add_ticket(Ticket("VPN connection failed", "Remote", 4, carol))
     queue.add_ticket(Ticket("Projector not displaying", "Conference Room A", 3, alice))
+    queue.add_ticket(Ticket("Access badge not working", "Main Entrance", 2, carol))
+    queue.add_ticket(Ticket("Database backup failed", "Data Center", 5, bob))
+
     queue.add_ticket(Ticket("Access badge not working", "Main Entrance", 2, carol))
     queue.add_ticket(Ticket("Database backup failed", "Data Center", 5, bob))
 
