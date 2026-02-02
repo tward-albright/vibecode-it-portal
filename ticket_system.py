@@ -48,8 +48,18 @@ class Queue:
         if key in self._keys:
             print("⚠️  Duplicate ticket ignored.")
             return
+
         self._tickets.append(ticket)
-        self._keys.add(ticket.key())
+        self._keys.add(key)
+
+    def remove_ticket(self, index: int):
+        if index < 0 or index >= len(self._tickets):
+            print("\nInvalid ticket number.\n")
+            return
+
+        ticket = self._tickets.pop(index)
+        self._keys.remove(ticket.key())
+        print(f"\n✅ Ticket marked as done:\n{ticket}\n")
 
     def get_tickets(self) -> List[Ticket]:
         return self._tickets
@@ -79,18 +89,37 @@ class TextUI:
             print(f"{i}. {ticket}")
         print("-" * 60 + "\n")
 
-    def sort_menu(self):
-        print("Sort tickets by:")
-        print("1. Urgency")
-        print("2. Location")
-        choice = input("Choose an option (1 or 2): ")
+    def queue_menu(self):
+        print("Queue options:")
+        print("1. Sort by urgency")
+        print("2. Sort by location")
+        print("3. Mark ticket as done")
+        print("4. Exit")
+        choice = input("Choose an option (1–4): ")
 
         if choice == "1":
             self.queue.sort_by_urgency()
             print("\nQueue sorted by urgency.\n")
+
         elif choice == "2":
             self.queue.sort_by_location()
             print("\nQueue sorted by location.\n")
+
+        elif choice == "3":
+            if not self.queue.get_tickets():
+                print("\nNo tickets to mark as done.\n")
+                return
+
+            try:
+                num = int(input("Enter ticket number to mark done: "))
+                self.queue.remove_ticket(num - 1)
+            except ValueError:
+                print("\nPlease enter a valid number.\n")
+
+        elif choice == "4":
+            print("\nGoodbye!\n")
+            exit()
+
         else:
             print("\nInvalid choice.\n")
 
@@ -124,9 +153,6 @@ if __name__ == "__main__":
 
     ui = TextUI(queue)
 
-    # Show initial queue
-    ui.display_queue()
-
-    # Let user sort and re-display
-    ui.sort_menu()
-    ui.display_queue()
+    while True:
+        ui.display_queue()
+        ui.queue_menu()
