@@ -103,6 +103,13 @@ if __name__ == "__main__":
     queue.add_ticket(Ticket("Email access issue", "Office 1B", 3, carol))
     queue.add_ticket(Ticket("Wi-Fi down", "Office 3C", 4, alice))
 
+    # Add more sample tickets
+    queue.add_ticket(Ticket("Laptop overheating", "Office 4D", 1, bob))
+    queue.add_ticket(Ticket("VPN connection failed", "Remote", 4, carol))
+    queue.add_ticket(Ticket("Projector not displaying", "Conference Room A", 3, alice))
+    queue.add_ticket(Ticket("Access badge not working", "Main Entrance", 2, carol))
+    queue.add_ticket(Ticket("Database backup failed", "Data Center", 5, bob))
+
     ui = TextUI(queue)
 
     # Show initial queue
