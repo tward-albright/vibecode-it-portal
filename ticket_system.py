@@ -1,4 +1,5 @@
-from dataclasses import dataclass
+import json
+from dataclasses import asdict, dataclass
 from typing import List
 
 
@@ -39,9 +40,12 @@ class Ticket:
 # Queue
 # -------------------------
 class Queue:
-    def __init__(self):
+    def __init__(self, done_file="done_tickets.json"):
         self._tickets: List[Ticket] = []
         self._keys = set()
+        self._done: List[Ticket] = []
+        self.done_file = done_file
+        self._load_done_tickets()
 
     def add_ticket(self, ticket: Ticket):
         key = ticket.key()
@@ -59,7 +63,38 @@ class Queue:
 
         ticket = self._tickets.pop(index)
         self._keys.remove(ticket.key())
+
+        self._done.append(ticket)
+        self._save_done_tickets()
+
         print(f"\n✅ Ticket marked as done:\n{ticket}\n")
+
+    def _save_done_tickets(self):
+        with open(self.done_file, "w", encoding="utf-8") as f:
+            json.dump(
+                [{**asdict(t), "requester": asdict(t.requester)} for t in self._done],
+                f,
+                indent=2,
+            )
+
+    def _load_done_tickets(self):
+        try:
+            with open(self.done_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                for item in data:
+                    user = User(**item["requester"])
+                    ticket = Ticket(
+                        issue=item["issue"],
+                        location=item["location"],
+                        urgency=item["urgency"],
+                        requester=user,
+                    )
+                    self._done.append(ticket)
+        except FileNotFoundError:
+            pass
+
+    def get_done_tickets(self) -> List[Ticket]:
+        return self._done
 
     def get_tickets(self) -> List[Ticket]:
         return self._tickets
