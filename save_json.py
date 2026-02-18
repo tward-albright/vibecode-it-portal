@@ -7,7 +7,7 @@ ticket_data = {
     "requester": {
         "student_id": "000543811",
         "name": "John Smith",
-        "department": "Rossner"
+        "department": "Rossner",
     },
     "disc_details": {
         "asset_tag": "AST-SSD-7781",
@@ -18,21 +18,21 @@ ticket_data = {
         "capacity_gb": 1000,
         "interface": "SATA",
         "encryption_enabled": True,
-        "condition": "New"
+        "condition": "New",
     },
     "assignment": {
         "assigned_to": "IT Hardware Team",
         "assigned_date": datetime.now().strftime("%Y-%m-%d"),
         "status": "Pending Installation",
-        "priority": "Medium"
+        "priority": "Medium",
     },
     "audit_trail": [
         {
             "date": datetime.now().strftime("%Y-%m-%d"),
             "action": "Ticket Created",
-            "performed_by": "John Connors"
+            "performed_by": "John Connors",
         }
-    ]
+    ],
 }
 
 # Save JSON to file
